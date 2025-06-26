@@ -11,12 +11,5 @@ def emotion_detector(text_to_analyze):  # Define a function named sentiment_anal
     # Extracting sentiment label and score from the response
     label = formatted_response['documentSentiment']['label']
     score = formatted_response['documentSentiment']['score']
-    anger_score = formatted_response['documentSentiment']['score']
-    disgust_score = formatted_response['documentSentiment']['score']
-    fear_score = formatted_response['documentSentiment']['score']
-    joy_score = formatted_response['documentSentiment']['score']
-    sadness_score = formatted_response['documentSentiment']['score']
-    dominant_emotion = max(formatted_response['documentSentiment']['score']) 
     # Returning a dictionary containing sentiment analysis results
-    return {'anger': anger_score, 'disgust': disgust_score, 'fear': fear_score, 'joy': joy_score, 'sadness': sadness_score,'dominant_emotion': '<name of the dominant emotion>'
-}  
+    return {'label': label, 'score': score}  

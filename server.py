@@ -1,31 +1,30 @@
-from flask import Flask, redirect, render_template, url_for
-import json
+from flask import Flask, render_template, request
+from EmotionDetection.emotion_detection import emotion__detector
 
-app = Flask(__name__)
+app = Flask("Sentiment Analyzer")
 
-#Read Operation basic route 
 @app.route("/")
 def index():
+
+    # Render template 
     return render_template("index.html")
 
-@app.route("/emotionDetector")
-def emotion__detector(text_to_analyze):
-    url = 'https://sn-watson-sentiment-bert.labs.skills.network/v1/watson.runtime.nlp.v1/NlpService/SentimentPredict'  # URL of the sentiment analysis service
-    myobj = { "raw_document": { "text": text_to_analyse } }  # Create a dictionary with the text to be analyzed
-    header = {"grpc-metadata-mm-model-id": "sentiment_aggregated-bert-workflow_lang_multi_stock"}  # Set the headers required for the API request
-    response = requests.post(url, json = myobj, headers=header)  # Send a POST request to the API with the text and headers
-     
-    # Parsing the JSON response from the API
-    formatted_response = json.loads(response.text)
+# Sentiment Analyzer
+@app.route("/emotionDetector", methods=["GET"])
+def sent_analyzer():
+    # Retrieve the text to analyze from the request arguments
+    text_to_analyze = request.args.get('textToAnalyze')
 
-    # Extracting sentiment label and score from the response
-    label = formatted_response['documentSentiment']['label']
-    score = formatted_response['documentSentiment']['score']
+    # Pass the text to the sentiment_analyzer function and store the response
+    response = emotion_detector(text_to_analyze)
 
-    # Returning a dictionary containing sentiment analysis results
-    return {'label': label, 'score': score}
-    
+     # Extract the label and score from the response
+    label = response['label']
+    score = response['score']
 
-# Run the Application
-if __name__ =="__main__":
-    app.run(debug=True)
+    # Return a formatted string with the sentiment label and score
+    return "The given text has been identified as {} with a score of {}.".format(label.split('_')[1], score)
+
+
+if __name__ == "__main__":
+    app.run(host="0.0.0.0", port=5000)
