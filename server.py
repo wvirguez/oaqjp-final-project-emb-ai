@@ -19,10 +19,9 @@ def sent_analyzer():
     # Error Handling Function"""
     if len(label) == 0:
         return {'message':'Invalid text Please try again!'}
-    else:
-        score = response['score']
-        # Return a formatted string with the sentiment label"""
-        return {'label': label, 'score': score}
+    score = response['score']
+    # Return a formatted string with the sentiment label"""
+    return {'label': label, 'score': score}
 
 if __name__ == "__main__": # main function
     app.run(host="0.0.0.0", port=5000)
