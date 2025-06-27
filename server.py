@@ -1,3 +1,5 @@
+"""Module providing a sentiment detector"""
+
 from flask import Flask, render_template, request
 from EmotionDetection.emotion_detection import emotion_detector
 
@@ -5,31 +7,22 @@ app = Flask("Sentiment Analyzer")
 
 @app.route("/")
 def index():
-
-    # Render template 
+    """Render template"""
     return render_template("index.html")
 
-# Sentiment Analyzer
 @app.route("/emotionDetector", methods=["GET"])
 def sent_analyzer():
-    # Retrieve the text to analyze from the request arguments
+    """Retrieve the text to analyze from the request"""
     text_to_analyze = request.args.get('textToAnalyze')
-
-    # Pass the text to the sentiment_analyzer function and store the response
     response = emotion_detector(text_to_analyze)
-
-     # Extract the label and score from the response
     label = response['label']
-    
-    # Error Handling Function
-    if label == None:
+    # Error Handling Function"""
+    if len(label) == 0:
         return {'message':'Invalid text Please try again!'}
     else:
         score = response['score']
-        # Return a formatted string with the sentiment label and score
-        #return "The given text has been identified as {} with a score of {}.".format(label.split('_')[1], score)
+        # Return a formatted string with the sentiment label"""
         return {'label': label, 'score': score}
 
-
-if __name__ == "__main__":
+if __name__ == "__main__": # main function
     app.run(host="0.0.0.0", port=5000)
